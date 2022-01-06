@@ -188,15 +188,15 @@ expire_time = 3600
 bucket_name = 'images'
 file_name = 'india.png'
 object_name = 'india_in_minio_2'
-# bm_obj.post_file_using_resource(bucket_name,file_name,object_name)
+#bm_obj.post_file(bucket_name,file_name,object_name)
 
 bucket_name = 'images'
 file_name = 'todo.txt'
 object_name = 'india_in_minio_3'
 #print(bm_obj.post_file(bucket_name, file_name,object_name))
 
-bucket_name = 'mybucket8'
-#print(bm_obj.create_new_bucket(bucket_name))
+bucket_name = 'mybucket999'
+print(bm_obj.create_new_bucket(bucket_name))
 
 bucket_name = 'images'
 file_path = 'me/india_in_minio.png'
