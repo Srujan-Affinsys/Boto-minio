@@ -117,21 +117,10 @@ class TestFile(unittest.TestCase):
 
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
         self.assertIsNone(minio.get_link(str(uuid.uuid4()),'me/base64_file',3800))
+
     def test_post_file_get_link(self):
-            minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-            self.assertIsNotNone(minio.post_file_get_link('mybucket999','demo.txt','demo_minio.txt'))
-
-    def test_post_file_get_link_bucket_not_existing(self):
-            minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-            self.assertIsNone(minio.post_file_get_link(str(uuid.uuid4()),'demo.txt','demo_minio.txt'))
-
-    def test_post_file_get_link_file_path_not_existing(self):
-            minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-            self.assertIsNone(minio.post_file_get_link('mybucket999',str(uuid.uuid4()),'demo_minio.txt'))
-
-    
-    
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+        minio.post_file_get_link('images',)
 
     
 
-    

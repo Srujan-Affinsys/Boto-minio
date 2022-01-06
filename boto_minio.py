@@ -113,7 +113,7 @@ class BotoMinio:
 
     def post_file_get_link(self, bucket_name, file_name, object_name):
 
-        if self.check_bucket_exist(bucket_name):
+        if self.check_bucket_exist(bucket_name) and self.check_local_file_exist(file_name):
             self.post_file(bucket_name, file_name, object_name)
             return HOST + bucket_name + '/' + object_name
         return None
@@ -162,11 +162,12 @@ class BotoMinio:
         return object_path in [object.key for object in bucket.objects.all()]
 
     def read_object_content(self, bucket_name, object_name):
-
-        bucket = self.resource.Bucket(bucket_name)
-        for obj in bucket.objects.all():
-            if obj.key == object_name:
-                return obj.get()['Body'].read()
+        if self.check_bucket_exist(bucket_name):
+            bucket = self.resource.Bucket(bucket_name)
+            for obj in bucket.objects.all():
+                if obj.key == object_name:
+                    data_read= obj.get()['Body'].read()
+                    return data_read
 
 
 bm_obj = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
@@ -208,9 +209,9 @@ bucket_name = 'mybucket8'
 
 
 bucket_name = 'images'
-file_name = 'india.png'
-object_name = 'me/india_in_minio.png'
-# print(bm_obj.post_file_get_link(bucket_name, file_name, object_name))
+file_name = 'demo.txt'
+object_name = 'me/india_in_minio.txt'
+print(bm_obj.post_file_get_link(bucket_name, file_name, object_name))
 
 bucket_name = 'mybucket'
 file_name = 'bytes.txt'
@@ -236,4 +237,4 @@ file_path = 'me/image.png'
 
 bucket_name = 'images'
 object_name = 'greetings_str.txt'
-#print(bm_obj.read_object_content(bucket_name, object_name))
+print(bm_obj.read_object_content(bucket_name, object_name))
