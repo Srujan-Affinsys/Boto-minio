@@ -237,4 +237,4 @@ file_path = 'me/image.png'
 
 bucket_name = 'images'
 object_name = 'greetings_str.txt'
-print(bm_obj.read_object_content(bucket_name, object_name))
+#print(bm_obj.read_object_content(bucket_name, object_name))
