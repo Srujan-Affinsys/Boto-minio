@@ -1,0 +1,12 @@
+version: '3'
+services:
+    datastore1:
+        image: 'bankbuddy.azurecr.io/amigo-storage:v1.0.1'
+        network_mode: "host"
+        container_name: amigo_storage1
+        environment:
+        - MINIO_ACCESS_KEY=inm_img
+        - MINIO_SECRET_KEY=buddybuddy
+        command: server /minio_data
+        volumes:
+        - ../storage-data:/minio_data
