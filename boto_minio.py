@@ -196,7 +196,7 @@ object_name = 'india_in_minio_3'
 #print(bm_obj.post_file(bucket_name, file_name,object_name))
 
 bucket_name = 'mybucket999'
-print(bm_obj.create_new_bucket(bucket_name))
+#print(bm_obj.create_new_bucket(bucket_name))
 
 bucket_name = 'images'
 file_path = 'me/india_in_minio.png'
