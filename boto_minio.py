@@ -1,6 +1,4 @@
 import boto3
-# Boto3
-import botocore
 from base64 import b64decode
 import uuid
 from pathlib import Path
@@ -11,11 +9,6 @@ ACCESS_KEY = 'inm_img'
 SECRET_KEY = 'buddybuddy'
 VERSION = 's3v4'
 HOST = 'http://127.0.0.1:9000/'
-
-
-# check if bucket exists on minio               Done
-# check if files exists on minio                Done
-# get the content of files present on the mino  Done
 class BotoMinio:
     def __init__(self, storage=None, access_key=None, secret_key=None, host=None, version=None):
 
@@ -40,6 +33,7 @@ class BotoMinio:
                                    aws_secret_access_key=self.secret_key)
 
     def post_data(self, bucket_name, data, object_name):
+        """Posts the data into the specified object path"""
         try:
             object = self.resource.Object(bucket_name, object_name)
             response = object.put(Body=data)  # todo return of .put()
@@ -50,18 +44,20 @@ class BotoMinio:
   
     
     def post_data_get_link(self, bucket_name, data, object_name):
-
+        """Posts the data into the specified object path and gets the link of the object"""
         if (self.check_bucket_exist(bucket_name)):
             self.resource.Object(bucket_name, object_name).put(Body=data)
               
             return HOST + bucket_name + '/' + object_name
 
     def check_local_file_exist(self,file_name):
+        """Helper method to verify if the specified local file exists in the local directory"""
         if os.path.exists(file_name):
             return True
         return False
 
     def post_file(self, bucket_name, file_name, object_name=None):
+        """Uploads the file in to the minio"""
         if object_name is None:
             object_name = str(uuid.uuid4())+file_name
 
@@ -71,22 +67,22 @@ class BotoMinio:
         return False  
         
     def get_link(self, bucket_name, object_path, time):
-     
-            if self.check_bucket_exist(bucket_name) and self.check_object_exist(bucket_name,object_path):
-                
-                response = self.client.generate_presigned_url('get_object',
-                                                        Params={
-                                                            'Bucket': bucket_name,
-                                                            'Key': object_path
-                                                        },
-                                                        ExpiresIn=time)
-                return response
-            else:
-                return None
+        """Gives the download link of the specified object"""
+        if self.check_bucket_exist(bucket_name) and self.check_object_exist(bucket_name,object_path):
+            
+            response = self.client.generate_presigned_url('get_object',
+                                                    Params={
+                                                        'Bucket': bucket_name,
+                                                        'Key': object_path
+                                                    },
+                                                    ExpiresIn=time)
+            return response
+        else:
+            return None
             
 
     def create_new_bucket(self, bucket_name):
-
+        """Creates a bucket with speciefied bucket name"""
         if not self.check_bucket_exist(bucket_name):
             self.client.create_bucket(Bucket=bucket_name)
             return True
@@ -179,7 +175,7 @@ class BotoMinio:
             return False
         return response['ResponseMetadata']['HTTPStatusCode'] == 200
 
-    def check_object_exist(self, bucket_name, object_path) -> bool:  # Todo return types and object types
+    def check_object_exist(self, bucket_name, object_path) -> bool:  
 
         try:
             bucket = self.resource.Bucket(bucket_name)
