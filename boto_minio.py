@@ -47,13 +47,20 @@ class BotoMinio:
             if error.response['ResponseMetadata']['HTTPStatusCode']==404:
                 return False
         return response['ResponseMetadata']['HTTPStatusCode'] == 200
-        # rt link, object_path, dict
+  
+    
+    def post_data_get_link(self, bucket_name, data, object_name):
 
+        if (self.check_bucket_exist(bucket_name)):
+            self.resource.Object(bucket_name, object_name).put(Body=data)
+              
+            return HOST + bucket_name + '/' + object_name
 
     def check_local_file_exist(self,file_name):
         if os.path.exists(file_name):
             return True
         return False
+
     def post_file(self, bucket_name, file_name, object_name=None):
         if object_name is None:
             object_name = str(uuid.uuid4())+file_name
@@ -85,7 +92,15 @@ class BotoMinio:
             return True
         
         return False
-        
+
+    def create_new_uuid_bucket(self):
+        response=self.client.create_bucket(Bucket=str(uuid.uuid4()))
+        return response['ResponseMetadata']['HTTPHeaders']['location'][1:]
+      
+    
+    def create_bucket_with_folder(self):
+        response=self.client.create_bucket(Bucket=str(uuid.uuid4()), Key=(str(uuid.uuid4())+'/'))
+        return response['ResponseMetadata']['HTTPHeaders']['location']
 
     def delete_object_file(self, bucket_name, file_path):#todo 
         """
@@ -100,7 +115,7 @@ class BotoMinio:
 
     def del_bucket(self, bucket_name):
 
-        #self.client.delete_bucket(Bucket=bucket_name) "only empty buckets"
+        #self.client.delete_bucket(Bucket=bucket_name) "was deleteing  only empty buckets"
 
 
         if self.check_bucket_exist(bucket_name):
@@ -110,6 +125,20 @@ class BotoMinio:
             bucket.delete()
             return True
         return False
+
+    def del_bucket_uuid(self, bucket_name):
+
+        #self.client.delete_bucket(Bucket=bucket_name) "was deleteing  only empty buckets"
+
+
+        if self.check_bucket_exist(bucket_name):
+
+            bucket = self.resource.Bucket(bucket_name)
+            bucket.objects.all().delete()
+            bucket.delete()
+            
+        
+
 
     def post_file_get_link(self, bucket_name, file_name, object_name):
 
@@ -161,7 +190,7 @@ class BotoMinio:
                 return False
         return object_path in [object.key for object in bucket.objects.all()]
 
-    def read_object_content(self, bucket_name, object_name):
+    def read_object_content_bytes(self, bucket_name, object_name):
         if self.check_bucket_exist(bucket_name):
             bucket = self.resource.Bucket(bucket_name)
             for obj in bucket.objects.all():
@@ -169,9 +198,18 @@ class BotoMinio:
                     data_read= obj.get()['Body'].read()
                     return data_read
 
+    def read_object_content_string(self, bucket_name, object_name):
+        if self.check_bucket_exist(bucket_name):
+            bucket = self.resource.Bucket(bucket_name)
+            for obj in bucket.objects.all():
+                if obj.key == object_name:
+                    data_read= obj.get()['Body'].read()
+                    return data_read.decode()
+
+
 
 bm_obj = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-
+#print(bm_obj.create_new_uuid_bucket())
 byt_data = bytes(10)
 # OR text_data_byt=b'\x00\x00\x00\x00\x00' value for 5
 str_data = 'BYEEE good niGhT'  # strings
@@ -181,6 +219,10 @@ object_name_str = 'greetings_str.txt'
 #bm_obj.post_data(bucket_name, byt_data, object_name_byt)
 #print(bm_obj.post_data(bucket_name, str_data, object_name_str))
 
+bucket_name="mybucket999"
+data="Srujan KNss"
+object_name="obj"
+#print(bm_obj.post_data_get_link(bucket_name,data,object_name))
 bucket_name = 'images'
 object_path = 'bottle_iddn_minio_2'
 expire_time = 3600
@@ -211,8 +253,9 @@ bucket_name = 'mybucket8'
 bucket_name = 'images'
 file_name = 'demo.txt'
 object_name = 'me/india_in_minio.txt'
-print(bm_obj.post_file_get_link(bucket_name, file_name, object_name))
-
+#print(bm_obj.post_file_get_link(bucket_name, file_name, object_name))
+#print(bm_obj.create_new_uuid_bucket())
+#print(bm_obj.create_bucket_with_folder())
 bucket_name = 'mybucket'
 file_name = 'bytes.txt'
 file_in = 'nature.jpeg'

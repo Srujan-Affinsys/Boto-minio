@@ -4,20 +4,6 @@ from boto_minio import BotoMinio, STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY
 #13 methods
 # buckets exists or not
 
-def create_bucket():
-    pass
-    # rt bucket_name
-
-def create_bucket_with_folder():
-    pass
-    # rt bucket_name, path
-
-
-def delete_bucket():
-    pass
-
-def delete_bucket_with_folder():
-    pass
 
 
 
@@ -59,12 +45,16 @@ class TestFile(unittest.TestCase):
 
     def test_upload_text(self):
         """check if we can upload text into minio"""
+
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+        # bucket_name/location = create_ bucket()
+
         data  = b'srujan\'s data'
         self.assertTrue(minio.post_data('images',data,'test_text.txt'))
 
-        self.assertEqual( minio.read_object_content('images','test_text.txt'),data,data)
+        self.assertEqual( minio.read_object_content_bytes('images','test_text.txt'),data,data)
         
+        # delete_bucket(bucket_name)
         
     
     def test_upload_text_bucket_not_existing(self):
@@ -78,7 +68,7 @@ class TestFile(unittest.TestCase):
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
         data=b'minio'
         self.assertTrue(minio.post_data('images',data,'test_bytes_minio.txt'))
-        self.assertEqual( minio.read_object_content('images','test_bytes_minio.txt'),data,data)
+        self.assertEqual( minio.read_object_content_bytes('images','test_bytes_minio.txt'),data,data)
 
 
     def test_upload_bytes_bucket_not_existing(self):
@@ -117,6 +107,7 @@ class TestFile(unittest.TestCase):
 
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
         self.assertIsNone(minio.get_link(str(uuid.uuid4()),'me/base64_file',3800))
+    
     def test_post_file_get_link(self):
             minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
             self.assertIsNotNone(minio.post_file_get_link('mybucket999','demo.txt','demo_minio.txt'))
@@ -130,8 +121,37 @@ class TestFile(unittest.TestCase):
             self.assertIsNone(minio.post_file_get_link('mybucket999',str(uuid.uuid4()),'demo_minio.txt'))
 
     
-    
+    def test_post_data_get_link(self):
+            minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+            data="sss"
+            self.assertIsNotNone(minio.post_data_get_link('mybucket999',data,'demo_minio.txt'))
 
-    
+class TestFileUuidBuckets(unittest.TestCase):
+    def test_upload_text_string_uuid(self):
+        """check if we can upload text into minio"""
+
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+
+        bucket_name=minio.create_new_uuid_bucket()
+        data  = b'UUUIID srujan\'s data'
+        self.assertTrue(minio.post_data(bucket_name,data,'uuid_test.txt'))
+
+        self.assertEqual(minio.read_object_content_bytes(bucket_name,'uuid_test.txt'),data,data)
+        
+        minio.del_bucket_uuid(bucket_name)
+        
+    def test_upload_text_bytes_uuid(self):
+        """check if we can upload text into minio"""
+
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+
+        bucket_name=minio.create_new_uuid_bucket()
+        data  = 'UUUIID srujan\'s data'
+        self.assertTrue(minio.post_data(bucket_name,data,'uuid_test.txt'))
+
+        self.assertEqual(minio.read_object_content_string(bucket_name,'uuid_test.txt'),data,data)
+        
+        minio.del_bucket_uuid(bucket_name)
+
 
     
