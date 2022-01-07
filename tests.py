@@ -1,12 +1,6 @@
 import unittest
 import uuid 
 from boto_minio import BotoMinio, STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY
-#13 methods
-# buckets exists or not
-
-
-
-
 class TestBucket(unittest.TestCase):
     def test_create_new_bucket(self):
         """Check if we can create a bucket in mino"""
@@ -139,6 +133,19 @@ class TestFileUuidBuckets(unittest.TestCase):
         self.assertEqual(minio.read_object_content_bytes(bucket_name,'uuid_test.txt'),data,data)
         
         minio.del_bucket_uuid(bucket_name)
+
+    def test_upload_text_string_given_object_folder_uuid(self):
+        """check if we can upload text into minio inside a folder"""
+
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+
+        bucket_name=minio.create_new_uuid_bucket()
+        data  = b'UUUIID srujan\'s data'
+        self.assertTrue(minio.post_data(bucket_name,data,'subfolder/uuid_test.txt'))
+
+        self.assertEqual(minio.read_object_content_bytes(bucket_name,'subfolder/uuid_test.txt'),data,data)
+        
+        minio.del_bucket_uuid(bucket_name)
         
     def test_upload_text_bytes_uuid(self):
         """check if we can upload text into minio"""
@@ -153,7 +160,30 @@ class TestFileUuidBuckets(unittest.TestCase):
         
         minio.del_bucket_uuid(bucket_name)
 
+    def test_upload_text_bytes_given_object_folder_uuid(self):
+        """check if we can upload text into minio inside a folder"""
 
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+
+        bucket_name=minio.create_new_uuid_bucket()
+        data  = b'UUUIID srujan\'s data'
+        self.assertTrue(minio.post_data(bucket_name,data,'subfolder/uuid_test.txt'))
+
+        self.assertEqual(minio.read_object_content_bytes(bucket_name,'subfolder/uuid_test.txt'),data,data)
+        
+        minio.del_bucket_uuid(bucket_name)
+
+    def test_upload_text_file_uuid_given_object_folder_uuid(self):
+        """check if we can upload file into minio"""
+
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+
+        bucket_name=minio.create_new_uuid_bucket()
+  
+        self.assertTrue(minio.post_file(bucket_name,'commands.txt','subfolder/commands_in_minio'))
+       
+        minio.del_bucket_uuid(bucket_name)
+        
     def test_upload_text_file_uuid(self):
         """check if we can upload file into minio"""
 
@@ -164,7 +194,6 @@ class TestFileUuidBuckets(unittest.TestCase):
         self.assertTrue(minio.post_file(bucket_name,'commands.txt','commands_in_minio'))
        
         minio.del_bucket_uuid(bucket_name)
-        
 
 
     def test_upload_text_file_file_path_not_existing_uuid(self):
@@ -177,4 +206,6 @@ class TestFileUuidBuckets(unittest.TestCase):
         self.assertFalse(minio.post_file(bucket_name,str(uuid.uuid4()),'commands_in_minio'))
        
         minio.del_bucket_uuid(bucket_name)
+
+
         

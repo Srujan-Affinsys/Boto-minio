@@ -90,14 +90,12 @@ class BotoMinio:
         return False
 
     def create_new_uuid_bucket(self):
+        """Creates a bucket with uuid as bucket_name"""
         response=self.client.create_bucket(Bucket=str(uuid.uuid4()))
         return response['ResponseMetadata']['HTTPHeaders']['location'][1:]
       
     
-    def create_bucket_with_folder(self):
-        response=self.client.create_bucket(Bucket=str(uuid.uuid4()), Key=(str(uuid.uuid4())+'/'))
-        return response['ResponseMetadata']['HTTPHeaders']['location']
-
+  
     def delete_object_file(self, bucket_name, file_path):#todo 
         """
         !!!!Even if the object does not exist it doesn't show up any error!!!!
@@ -123,8 +121,6 @@ class BotoMinio:
         return False
 
     def del_bucket_uuid(self, bucket_name):
-
-        #self.client.delete_bucket(Bucket=bucket_name) "was deleteing  only empty buckets"
 
 
         if self.check_bucket_exist(bucket_name):
@@ -202,78 +198,3 @@ class BotoMinio:
                     data_read= obj.get()['Body'].read()
                     return data_read.decode()
 
-
-
-bm_obj = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-#print(bm_obj.create_new_uuid_bucket())
-byt_data = bytes(10)
-# OR text_data_byt=b'\x00\x00\x00\x00\x00' value for 5
-str_data = 'BYEEE good niGhT'  # strings
-bucket_name = 'imagesss'
-object_name_byt = 'greetings_byt.txt'
-object_name_str = 'greetings_str.txt'
-#bm_obj.post_data(bucket_name, byt_data, object_name_byt)
-#print(bm_obj.post_data(bucket_name, str_data, object_name_str))
-
-bucket_name="mybucket999"
-data="Srujan KNss"
-object_name="obj"
-#print(bm_obj.post_data_get_link(bucket_name,data,object_name))
-bucket_name = 'images'
-object_path = 'bottle_iddn_minio_2'
-expire_time = 3600
-#print(bm_obj.get_link(bucket_name,object_path,expire_time))
-
-bucket_name = 'images'
-file_name = 'india.png'
-object_name = 'india_in_minio_2'
-#bm_obj.post_file(bucket_name,file_name,object_name)
-
-bucket_name = 'images'
-file_name = 'todo.txt'
-object_name = 'india_in_minio_3'
-#print(bm_obj.post_file(bucket_name, file_name,object_name))
-
-bucket_name = 'mybucket999'
-#print(bm_obj.create_new_bucket(bucket_name))
-
-bucket_name = 'images'
-file_path = 'me/india_in_minio.png'
-#print(bm_obj.delete_object_file(bucket_name,file_path))
-
-
-bucket_name = 'mybucket8'
-#print(bm_obj.del_bucket(bucket_name))
-
-
-bucket_name = 'images'
-file_name = 'demo.txt'
-object_name = 'me/india_in_minio.txt'
-#print(bm_obj.post_file_get_link(bucket_name, file_name, object_name))
-#print(bm_obj.create_new_uuid_bucket())
-#print(bm_obj.create_bucket_with_folder())
-bucket_name = 'mybucket'
-file_name = 'bytes.txt'
-file_in = 'nature.jpeg'
-# bm_obj.read_bytes(bucket_name, file_name, file_in)
-
-
-bucket_name = 'mybucket3'
-base64_data = 'c3J1amFu'
-file_name = 'base64_file'
-subfolder = 'me'
-full_object_path = None
-unqiue_filename = False
-# bm_obj.upload_base64(bucket_name,base64_data,file_name,subfolder,full_object_path,unqiue_filename)
-
-
-bucket_name = 'mybucketaa2'
-#print(bm_obj.check_bucket_exist(bucket_name))
-
-bucket_name = 'imagesn'
-file_path = 'me/image.png'
-#print(bm_obj.check_object_exist(bucket_name,file_path))
-
-bucket_name = 'images'
-object_name = 'greetings_str.txt'
-#print(bm_obj.read_object_content(bucket_name, object_name))
