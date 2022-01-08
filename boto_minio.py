@@ -110,7 +110,7 @@ class BotoMinio:
 
     def del_bucket(self, bucket_name):
 
-        #self.client.delete_bucket(Bucket=bucket_name) "was deleteing  only empty buckets"
+        """Deletes the bucket with the specified bucket name"""
 
 
         if self.check_bucket_exist(bucket_name):
@@ -122,7 +122,7 @@ class BotoMinio:
         return False
 
     def del_bucket_uuid(self, bucket_name):
-
+        """Deletes the bucket with uuid bucket name"""
 
         if self.check_bucket_exist(bucket_name):
 
@@ -134,14 +134,14 @@ class BotoMinio:
 
 
     def post_file_get_link(self, bucket_name, file_name, object_name):
-
+        """Gives the download link after uploading the file"""
         if self.check_bucket_exist(bucket_name) and self.check_local_file_exist(file_name):
             self.post_file(bucket_name, file_name, object_name)
             return HOST + bucket_name + '/' + object_name
         return None
 
     def read_bytes(self, bucket_name, object_name, file_name):
-
+        """Read the bytes from the specifief file_name and posts it as an object"""
         with open(file_name, 'rb') as fp:
             byte = fp.read()
 
@@ -149,6 +149,8 @@ class BotoMinio:
 
     def upload_base64(self, bucket_name, base64_data: str, file_name, subfolder='', full_object_path=None,
                       unqiue_filename=False):
+
+        """Uploads base64 encoded string"""
         object_path = Path(file_name)
 
         if full_object_path:
@@ -161,7 +163,7 @@ class BotoMinio:
         self.post_data(bucket_name, bytes_data, object_path.as_posix())
 
     def check_bucket_exist(self, bucket_name):  
-        
+        """Checks weather the bucket exists or not"""
         try:
              response = self.client.head_bucket(
             Bucket=bucket_name,
@@ -173,6 +175,7 @@ class BotoMinio:
         return response['ResponseMetadata']['HTTPStatusCode'] == 200
 
     def check_object_exist(self, bucket_name, object_path) -> bool:  
+        """Checks weather the Object exists or not"""
 
         try:
             bucket = self.resource.Bucket(bucket_name)
@@ -184,6 +187,7 @@ class BotoMinio:
         return object_path in [object.key for object in bucket.objects.all()]
 
     def read_object_content_bytes(self, bucket_name, object_name):
+        """Reads the object contents and returns as bytes"""
         if self.check_bucket_exist(bucket_name):
             bucket = self.resource.Bucket(bucket_name)
             for obj in bucket.objects.all():
@@ -192,6 +196,7 @@ class BotoMinio:
                     return data_read
 
     def read_object_content_string(self, bucket_name, object_name):
+        """Reads the object contents and returns as string"""
         if self.check_bucket_exist(bucket_name):
             bucket = self.resource.Bucket(bucket_name)
             for obj in bucket.objects.all():
