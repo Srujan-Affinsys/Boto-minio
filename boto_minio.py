@@ -4,6 +4,7 @@ import uuid
 from pathlib import Path
 from botocore.exceptions import ClientError
 import os
+
 STORAGE_SERVICE = 's3'
 ACCESS_KEY = 'inm_img'
 SECRET_KEY = 'buddybuddy'
@@ -197,4 +198,3 @@ class BotoMinio:
                 if obj.key == object_name:
                     data_read= obj.get()['Body'].read()
                     return data_read.decode()
-

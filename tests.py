@@ -6,7 +6,7 @@ class TestBucket(unittest.TestCase):
         """Check if we can create a bucket in mino"""
 
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-        #self.assertTrue(minio.create_new_bucket(str(uuid.uuid4())))
+        self.assertTrue(minio.create_new_bucket(str(uuid.uuid4())))
 
     def test_create_new_bucket_existing_name(self): 
         """Check if we can't create a bucket existing previously in mino"""
@@ -41,14 +41,14 @@ class TestFile(unittest.TestCase):
         """check if we can upload text into minio"""
 
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
-        # bucket_name/location = create_ bucket()
+     
 
         data  = b'srujan\'s data'
         self.assertTrue(minio.post_data('images',data,'test_text.txt'))
 
         self.assertEqual( minio.read_object_content_bytes('images','test_text.txt'),data,data)
         
-        # delete_bucket(bucket_name)
+      
         
     
     def test_upload_text_bucket_not_existing(self):
