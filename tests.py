@@ -50,7 +50,6 @@ class TestFile(unittest.TestCase):
         
       
         
-    
     def test_upload_text_bucket_not_existing(self):
         """check if we can't upload text into minio bucket not existing"""
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
@@ -130,15 +129,28 @@ class TestFile(unittest.TestCase):
 
 class TestFileUuidBuckets(unittest.TestCase):
     def test_upload_text_string_uuid(self):
-        """check if we can upload text into minio"""
+        """check if we can upload text into minio using UUID"""
 
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
 
         bucket_name=minio.create_new_uuid_bucket()
-        data  = b'UUUIID srujan\'s data'
+        data  = 'UUUIID srujan\'s data'
         self.assertTrue(minio.post_data(bucket_name,data,'uuid_test.txt'))
 
-        self.assertEqual(minio.read_object_content_bytes(bucket_name,'uuid_test.txt'),data,data)
+        self.assertEqual(minio.read_object_content_string(bucket_name,'uuid_test.txt'),data,data)
+        
+        minio.del_bucket_uuid(bucket_name)
+
+    def test_upload_text_string_uuid(self):
+        """check if we can upload text into minio using UUID"""
+
+        minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
+
+        bucket_name=minio.create_new_uuid_bucket()
+        data  = 'UUUIID srujan\'s data'
+        self.assertTrue(minio.post_data(bucket_name,data,'uuid_test.txt'))
+
+        self.assertEqual(minio.read_object_content_string(bucket_name,'uuid_test.txt'),data,data)
         
         minio.del_bucket_uuid(bucket_name)
 
@@ -148,10 +160,10 @@ class TestFileUuidBuckets(unittest.TestCase):
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
 
         bucket_name=minio.create_new_uuid_bucket()
-        data  = b'UUUIID srujan\'s data'
+        data  = 'UUUIID srujan\'s data'
         self.assertTrue(minio.post_data(bucket_name,data,'subfolder/uuid_test.txt'))
 
-        self.assertEqual(minio.read_object_content_bytes(bucket_name,'subfolder/uuid_test.txt'),data,data)
+        self.assertEqual(minio.read_object_content_string(bucket_name,'subfolder/uuid_test.txt'),data,data)
         
         minio.del_bucket_uuid(bucket_name)
         
@@ -161,10 +173,10 @@ class TestFileUuidBuckets(unittest.TestCase):
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
 
         bucket_name=minio.create_new_uuid_bucket()
-        data  = 'UUUIID srujan\'s data'
+        data  = b'UUUIID srujan\'s data'
         self.assertTrue(minio.post_data(bucket_name,data,'uuid_test.txt'))
 
-        self.assertEqual(minio.read_object_content_string(bucket_name,'uuid_test.txt'),data,data)
+        self.assertEqual(minio.read_object_content_bytes(bucket_name,'uuid_test.txt'),data,data)
         
         minio.del_bucket_uuid(bucket_name)
 

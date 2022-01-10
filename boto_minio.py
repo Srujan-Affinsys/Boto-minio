@@ -37,7 +37,7 @@ class BotoMinio:
         """Posts the data into the specified object path"""
         try:
             object = self.resource.Object(bucket_name, object_name)
-            response = object.put(Body=data)  # todo return of .put()
+            response = object.put(Body=data) 
         except ClientError as error:
             if error.response['ResponseMetadata']['HTTPStatusCode']==404:
                 return False
