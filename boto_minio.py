@@ -79,8 +79,7 @@ class BotoMinio:
                                                     ExpiresIn=time)
             return response
         else:
-            return None
-            
+            return None  
 
     def create_new_bucket(self, bucket_name):
         """Creates a bucket with speciefied bucket name"""
@@ -94,8 +93,6 @@ class BotoMinio:
         """Creates a bucket with uuid as bucket_name"""
         response=self.client.create_bucket(Bucket=str(uuid.uuid4()))
         return response['ResponseMetadata']['HTTPHeaders']['location'][1:]
-      
-    
   
     def delete_object_file(self, bucket_name, file_path):#todo 
         """
@@ -129,10 +126,7 @@ class BotoMinio:
             bucket = self.resource.Bucket(bucket_name)
             bucket.objects.all().delete()
             bucket.delete()
-            
-        
-
-
+ 
     def post_file_get_link(self, bucket_name, file_name, object_name):
         """Gives the download link after uploading the file"""
         if self.check_bucket_exist(bucket_name) and self.check_local_file_exist(file_name):
