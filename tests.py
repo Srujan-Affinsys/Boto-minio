@@ -156,7 +156,7 @@ class UuidBuckets(unittest.TestCase):
         bucket_name=minio.create_new_uuid_bucket()
         self.assertFalse(minio.post_file(bucket_name,str(uuid.uuid4()),'images/input_file_in_minio.txt'))
         minio.del_bucket_uuid(bucket_name)
-        
+
     def test_delete_object(self):
         """check if we can delete object in minio"""
         minio = BotoMinio(STORAGE_SERVICE, ACCESS_KEY, SECRET_KEY)
